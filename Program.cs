@@ -104,13 +104,24 @@ static async Task ManageDepartmentsAsync(DepartmentService service)
             break;
         }
         case "2":
-        case "3":
         {
-            bool activeOnly = sub == "3";
-            var depts = await service.GetAllDepartmentsAsync(activeOnly);
+            var depts = await service.GetAllDepartmentsAsync(activeOnly: false);
             if (depts.Count == 0)
             {
                 Console.WriteLine("No departments found.");
+                break;
+            }
+            Console.WriteLine("ID | Name | Location | Active");
+            foreach (var d in depts)
+                Console.WriteLine($"{d.DepartmentId} | {d.DepartmentName} | {d.Location ?? "N/A"} | {d.IsActive}");
+            break;
+        }
+        case "3":
+        {
+            var depts = await service.GetAllDepartmentsAsync(activeOnly: true);
+            if (depts.Count == 0)
+            {
+                Console.WriteLine("No active departments found.");
                 break;
             }
             Console.WriteLine("ID | Name | Location | Active");
@@ -205,10 +216,14 @@ static async Task ManageStudentsAsync(StudentService service)
             break;
         }
         case "2":
+        {
+            var students = await service.GetAllStudentsAsync(activeOnly: false);
+            PrintStudents(students);
+            break;
+        }
         case "3":
         {
-            bool activeOnly = sub == "3";
-            var students = await service.GetAllStudentsAsync(activeOnly);
+            var students = await service.GetAllStudentsAsync(activeOnly: true);
             PrintStudents(students);
             break;
         }
@@ -322,10 +337,14 @@ static async Task ManageCoursesAsync(CourseService service)
             break;
         }
         case "2":
+        {
+            var courses = await service.GetAllCoursesAsync(activeOnly: false);
+            PrintCourses(courses);
+            break;
+        }
         case "3":
         {
-            bool activeOnly = sub == "3";
-            var courses = await service.GetAllCoursesAsync(activeOnly);
+            var courses = await service.GetAllCoursesAsync(activeOnly: true);
             PrintCourses(courses);
             break;
         }
